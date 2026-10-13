@@ -16,7 +16,7 @@ body{margin:0;background:var(--bg);color:#f2f3f8;font-family:Inter,sans-serif;mi
 button,input{font:inherit}button{cursor:pointer}
 .wallpaper{position:fixed;inset:0;z-index:-3;background:#080a12}
 .wallpaper:before{content:"";position:absolute;inset:0;background-image:linear-gradient(90deg,rgba(5,7,14,.91),rgba(5,7,14,.73) 45%,rgba(5,7,14,.88)),linear-gradient(0deg,#080a12 0%,transparent 60%),url("https://images.unsplash.com/photo-1519608487953-e999c86e7455?auto=format&fit=crop&w=2400&q=90");background-position:center;background-size:cover;opacity:.78}
-.wallpaper:after{content:"";position:absolute;inset:0;background:radial-gradient(ellipse at 65% 20%,rgba(100,125,255,.17),transparent 35%),radial-gradient(ellipse at 10% 65%,rgba(129,75,210,.12),transparent 32%),linear-gradient(125deg,transparent 50%,rgba(255,213,71,.035));}
+.wallpaper:after{content:"";position:absolute;inset:0;background:radial-gradient(ellipse at 65% 20%,rgba(100,125,255,.17),transparent 35%),radial-gradient(ellipse at 10% 65%,rgba(129,75,210,.12),transparent 32%),linear-gradient(125deg,transparent 50%,rgba(255,213,71,.035))}
 *{scrollbar-width:thin;scrollbar-color:#42485b transparent}
 .glass{background:var(--panel);border:1px solid var(--line);backdrop-filter:blur(22px);-webkit-backdrop-filter:blur(22px);box-shadow:0 18px 55px #0003}
 .mono{font-family:"DM Mono",monospace;font-variant-numeric:tabular-nums}
@@ -116,7 +116,7 @@ button:focus-visible,input:focus-visible{outline:2px solid var(--yellow);outline
         </div>
       </div>
 
-      <div class="eyebrow mb-4">TOTAL ACCUMULATED STUDY TIME</div>
+      <div class="eyebrow mb-4">CURRENT UNSAVED SESSION</div>
       <div class="flex items-baseline flex-wrap gap-2">
         <div id="totalTime" class="timer">00:00:00</div>
         <div id="milliseconds" class="mono text-lg sm:text-2xl text-gray-500">.000</div>
@@ -125,13 +125,14 @@ button:focus-visible,input:focus-visible{outline:2px solid var(--yellow);outline
 
       <div class="flex items-center flex-wrap gap-3">
         <button id="startPauseBtn" class="btn primary rounded-full w-14 h-14 flex items-center justify-center text-xl" aria-label="Start timer"><i id="startPauseIcon" class="fa-solid fa-play ml-1"></i></button>
-        <button id="resetBtn" class="btn secondary rounded-full px-5 py-3 text-xs"><i class="fa-solid fa-rotate-left mr-2"></i>Reset time</button>
+        <button id="resetBtn" class="btn secondary rounded-full px-5 py-3 text-xs"><i class="fa-solid fa-floppy-disk mr-2"></i>Save session</button>
         <div class="ml-auto text-right">
           <div class="eyebrow mb-1">CURRENTLY STUDYING</div>
           <div id="activeSubjectLabel" class="font-semibold text-sm">Chemistry</div>
         </div>
       </div>
       <div class="flex items-center gap-2 mt-5 text-[10px] text-gray-500"><i class="fa-solid fa-shield-halved"></i><span id="saveStatus">Progress saved locally.</span></div>
+      <p class="text-[10px] text-gray-500 mt-2">Save commits this session to your cumulative totals and starts a fresh timer.</p>
     </div>
   </section>
 
@@ -143,30 +144,30 @@ button:focus-visible,input:focus-visible{outline:2px solid var(--yellow);outline
     <div class="grid grid-cols-2 gap-3" id="subjectGrid">
       <button class="subject" data-subject="Physics" style="--color:#80aaff;--tint:#80aaff14">
         <div class="flex justify-between items-center mb-5"><span class="text-sm font-semibold">Physics</span><span class="dot"></span></div>
-        <div class="mono text-xl" data-subject-time="Physics">00:00:00</div><div class="text-[10px] text-gray-500 mt-2">Focused hours</div>
+        <div class="mono text-xl" data-subject-time="Physics">00:00:00</div><div class="text-[10px] text-gray-500 mt-2">Cumulative focused time</div>
       </button>
       <button class="subject active" data-subject="Chemistry" style="--color:#ff997b;--tint:#ff997b14">
         <div class="flex justify-between items-center mb-5"><span class="text-sm font-semibold">Chemistry</span><span class="dot"></span></div>
-        <div class="mono text-xl" data-subject-time="Chemistry">00:00:00</div><div class="text-[10px] text-gray-500 mt-2">Focused hours</div>
+        <div class="mono text-xl" data-subject-time="Chemistry">00:00:00</div><div class="text-[10px] text-gray-500 mt-2">Cumulative focused time</div>
       </button>
       <button class="subject" data-subject="Mathematics" style="--color:#f5d547;--tint:#f5d54712">
         <div class="flex justify-between items-center mb-5"><span class="text-sm font-semibold">Mathematics</span><span class="dot"></span></div>
-        <div class="mono text-xl" data-subject-time="Mathematics">00:00:00</div><div class="text-[10px] text-gray-500 mt-2">Focused hours</div>
+        <div class="mono text-xl" data-subject-time="Mathematics">00:00:00</div><div class="text-[10px] text-gray-500 mt-2">Cumulative focused time</div>
       </button>
       <button class="subject" data-subject="Test / Mock" style="--color:#64e0bd;--tint:#64e0bd12">
         <div class="flex justify-between items-center mb-5"><span class="text-sm font-semibold">Test / Mock</span><span class="dot"></span></div>
-        <div class="mono text-xl" data-subject-time="Test / Mock">00:00:00</div><div class="text-[10px] text-gray-500 mt-2">Focused hours</div>
+        <div class="mono text-xl" data-subject-time="Test / Mock">00:00:00</div><div class="text-[10px] text-gray-500 mt-2">Cumulative focused time</div>
       </button>
     </div>
     <div class="mt-5 pt-4 border-t border-white/[.07]">
-      <div class="flex justify-between text-[10px] text-gray-400 mb-3"><span>STUDY DISTRIBUTION</span><span id="subjectTotalLabel" class="mono">0h</span></div>
+      <div class="flex justify-between text-[10px] text-gray-400 mb-3"><span>CUMULATIVE STUDY DISTRIBUTION</span><span id="subjectTotalLabel" class="mono">0h</span></div>
       <div id="subjectDistribution" class="flex gap-1 h-1.5 overflow-hidden rounded-full"></div>
       <div id="subjectLegend" class="grid grid-cols-2 lg:grid-cols-4 gap-2 mt-3"></div>
     </div>
   </section>
 
   <section class="grid grid-cols-2 gap-3">
-    <div class="glass rounded-2xl p-5"><div class="eyebrow mb-3">TOTAL STUDY TIME</div><div id="statTotal" class="display text-2xl font-semibold">0h 00m</div><div class="text-[10px] text-gray-500 mt-2">All subjects combined</div></div>
+    <div class="glass rounded-2xl p-5"><div class="eyebrow mb-3">TOTAL STUDY TIME</div><div id="statTotal" class="display text-2xl font-semibold">0h 00m</div><div class="text-[10px] text-gray-500 mt-2">All saved time + current session</div></div>
     <div class="glass rounded-2xl p-5"><div class="eyebrow mb-3">DAILY AVERAGE</div><div id="statAverage" class="display text-2xl font-semibold">0m</div><div class="text-[10px] text-gray-500 mt-2">Since first use</div></div>
   </section>
 </section>
@@ -249,7 +250,7 @@ button:focus-visible,input:focus-visible{outline:2px solid var(--yellow);outline
         <div class="flex gap-2 mt-4"><span class="rounded-full px-3 py-1 text-[10px] bg-yellow-300/10 text-yellow-200">Maths 8h</span><span class="rounded-full px-3 py-1 text-[10px] bg-orange-300/10 text-orange-200">Chemistry 8h</span></div>
       </div>
     </div>
-    <div class="mt-4 text-[11px] text-gray-500 leading-5"><i class="fa-solid fa-circle-info mr-2 text-yellow-300"></i>The subject cards above log time only for the subject you select. Switch the active subject whenever your study block changes.</div>
+    <div class="mt-4 text-[11px] text-gray-500 leading-5"><i class="fa-solid fa-circle-info mr-2 text-yellow-300"></i>The subject cards above log time only for the subject you select. Save your current session before switching subjects if you want its time credited to the subject you were studying.</div>
   </section>
 
   <section class="glass rounded-2xl p-5 sm:p-7">
@@ -379,24 +380,54 @@ const TOTAL_DAYS=dates.length;
 
 function fresh(){
  const subjectMs={};SUBJECTS.forEach(s=>subjectMs[s.name]=0);
- return {version:2,totalMs:0,subjectMs,activeSubject:'Chemistry',running:false,startedAt:null,checkedDays:{},createdAt:Date.now(),lastSavedAt:Date.now()};
+ return {
+  version:3,
+  totalMs:0,
+  subjectMs,
+  sessionMs:0,
+  activeSubject:'Chemistry',
+  running:false,
+  startedAt:null,
+  checkedDays:{},
+  createdAt:Date.now(),
+  lastSavedAt:Date.now()
+ };
 }
+
 function normalize(raw){
- const s=fresh();if(!raw||typeof raw!=='object')return s;
+ const s=fresh();
+ if(!raw||typeof raw!=='object')return s;
+
  s.totalMs=Math.max(0,Number(raw.totalMs)||0);
  SUBJECTS.forEach(x=>s.subjectMs[x.name]=Math.max(0,Number(raw.subjectMs?.[x.name])||0));
+
+ // Keep the unsaved timer session separately from permanent totals.
+ s.sessionMs=Math.max(0,Number(raw.sessionMs)||0);
+
  if(SUBJECTS.some(x=>x.name===raw.activeSubject))s.activeSubject=raw.activeSubject;
- if(raw.checkedDays&&typeof raw.checkedDays==='object')dates.forEach(d=>{if(raw.checkedDays[d.key]===true)s.checkedDays[d.key]=true});
+
+ if(raw.checkedDays&&typeof raw.checkedDays==='object'){
+  dates.forEach(d=>{if(raw.checkedDays[d.key]===true)s.checkedDays[d.key]=true});
+ }
+
  s.createdAt=Number(raw.createdAt)||Date.now();
  s.lastSavedAt=Number(raw.lastSavedAt)||Date.now();
- if(raw.running===true&&Number.isFinite(Number(raw.startedAt))){s.running=true;s.startedAt=Number(raw.startedAt)}
+
+ if(raw.running===true&&Number.isFinite(Number(raw.startedAt))){
+  s.running=true;
+  s.startedAt=Number(raw.startedAt);
+ }
+
  return s;
 }
+
 function load(){
  try{return normalize(JSON.parse(localStorage.getItem(KEY)||'null'))}
  catch(e){console.error(e);return fresh()}
 }
+
 let state=load(),monthFilter='all',toastTimer=null,lastSave=0;
+
 function save(){
  state.lastSavedAt=Date.now();
  try{
@@ -405,81 +436,158 @@ function save(){
   return true;
  }catch(e){
   if($('saveStatus'))$('saveStatus').textContent='Storage unavailable — export a backup.';
-  console.error(e);return false;
+  console.error(e);
+  return false;
  }
 }
+
+/*
+ * checkpoint() only adds elapsed time to the unsaved session.
+ * Permanent totals change only when Save session is clicked.
+ */
 function checkpoint(now=Date.now()){
  if(!state.running||!Number.isFinite(state.startedAt))return;
+
  const elapsed=Math.max(0,now-state.startedAt);
- state.totalMs+=elapsed;
- state.subjectMs[state.activeSubject]=(state.subjectMs[state.activeSubject]||0)+elapsed;
+ state.sessionMs=(state.sessionMs||0)+elapsed;
  state.startedAt=now;
 }
-function flush(){checkpoint();save();renderAll()}
+
+function flush(){
+ checkpoint();
+ save();
+ renderAll();
+}
+
 function fmt(ms){
  const s=Math.floor(Math.max(0,ms)/1000);
- return [Math.floor(s/3600),Math.floor(s%3600/60),s%60].map(n=>String(n).padStart(2,'0')).join(':');
+ return [
+  Math.floor(s/3600),
+  Math.floor(s%3600/60),
+  s%60
+ ].map(n=>String(n).padStart(2,'0')).join(':');
 }
+
 function compact(ms){
- const s=Math.floor(Math.max(0,ms)/1000),h=Math.floor(s/3600),m=Math.floor(s%3600/60),sec=s%60;
+ const s=Math.floor(Math.max(0,ms)/1000);
+ const h=Math.floor(s/3600);
+ const m=Math.floor(s%3600/60);
+ const sec=s%60;
  return h?`${h}h ${String(m).padStart(2,'0')}m`:m?`${m}m ${String(sec).padStart(2,'0')}s`:`${sec}s`;
 }
+
+// Current unsaved session, including elapsed time since the last checkpoint.
+function currentSession(now=Date.now()){
+ return (state.sessionMs||0)+
+  (state.running&&Number.isFinite(state.startedAt)
+   ?Math.max(0,now-state.startedAt)
+   :0);
+}
+
+// Cumulative total includes permanently saved time and the current session.
+function currentTotal(now=Date.now()){
+ return state.totalMs+currentSession(now);
+}
+
+// Subject cards preview the unsaved session under the currently selected subject.
+// The time becomes permanent only when the session is saved.
+function subjectTotal(name,now=Date.now()){
+ const liveSession=state.activeSubject===name?currentSession(now):0;
+ return (state.subjectMs[name]||0)+liveSession;
+}
+
 function toast(msg){
- $('toast').textContent=msg;$('toast').classList.add('show');clearTimeout(toastTimer);
+ $('toast').textContent=msg;
+ $('toast').classList.add('show');
+ clearTimeout(toastTimer);
  toastTimer=setTimeout(()=>$('toast').classList.remove('show'),2300);
 }
-function currentTotal(now=Date.now()){return state.totalMs+(state.running?Math.max(0,now-state.startedAt):0)}
-function subjectTotal(name,now=Date.now()){return state.subjectMs[name]+(state.running&&state.activeSubject===name?Math.max(0,now-state.startedAt):0)}
 
 function renderTimer(now=Date.now()){
- const total=currentTotal(now);
- $('totalTime').textContent=fmt(total);
- $('milliseconds').textContent='.'+String(Math.floor(total%1000)).padStart(3,'0');
+ // The large timer shows only the current unsaved session.
+ const session=currentSession(now);
+
+ $('totalTime').textContent=fmt(session);
+ $('milliseconds').textContent='.'+String(Math.floor(session%1000)).padStart(3,'0');
+
  $('statusText').textContent=state.running?'ACTIVE':'PAUSED';
  $('statusDot').style.background=state.running?'var(--green)':'#737b8f';
  $('statusDot').style.boxShadow=state.running?'0 0 12px var(--green)':'none';
+
  $('startPauseIcon').className=state.running?'fa-solid fa-pause':'fa-solid fa-play ml-1';
  $('startPauseBtn').setAttribute('aria-label',state.running?'Pause timer':'Start timer');
+
  $('activeSubjectLabel').textContent=state.activeSubject;
  $('activeSubjectLabel').style.color=SUBJECTS.find(s=>s.name===state.activeSubject).color;
+
  document.querySelectorAll('.subject').forEach(el=>{
   const active=el.dataset.subject===state.activeSubject;
-  el.classList.toggle('active',active);el.setAttribute('aria-pressed',String(active));
+  el.classList.toggle('active',active);
+  el.setAttribute('aria-pressed',String(active));
  });
+
  SUBJECTS.forEach(s=>{
   const el=document.querySelector(`[data-subject-time="${s.name}"]`);
   if(el)el.textContent=fmt(subjectTotal(s.name,now));
  });
+
+ // Distribution and stats use cumulative totals plus the live session.
+ const total=currentTotal(now);
+
  $('subjectTotalLabel').textContent=compact(total);
  $('subjectDistribution').innerHTML='';
  $('subjectLegend').innerHTML='';
  $('statsSubjects').innerHTML='';
+
  SUBJECTS.forEach(s=>{
-  const ms=subjectTotal(s.name,now),pct=total?ms/total*100:0;
-  const seg=document.createElement('div');seg.style.cssText=`width:${pct}%;min-width:${ms>0?2:0}px;background:${s.color};border-radius:10px`;seg.title=s.name+': '+compact(ms);
+  const ms=subjectTotal(s.name,now);
+  const pct=total?ms/total*100:0;
+
+  const seg=document.createElement('div');
+  seg.style.cssText=`width:${pct}%;min-width:${ms>0?2:0}px;background:${s.color};border-radius:10px`;
+  seg.title=s.name+': '+compact(ms);
   $('subjectDistribution').appendChild(seg);
-  const legend=document.createElement('div');legend.className='flex items-center gap-2 min-w-0 text-[10px] text-gray-400';
+
+  const legend=document.createElement('div');
+  legend.className='flex items-center gap-2 min-w-0 text-[10px] text-gray-400';
   legend.innerHTML=`<span style="width:7px;height:7px;border-radius:50%;background:${s.color};flex-shrink:0"></span><span class="truncate">${s.name}</span>`;
   $('subjectLegend').appendChild(legend);
+
   const row=document.createElement('div');
   row.innerHTML=`<div class="flex justify-between gap-3 text-xs mb-2"><span>${s.name}</span><span class="mono">${compact(ms)}</span></div><div class="bar"><div style="width:${pct}%;background:${s.color}"></div></div>`;
   $('statsSubjects').appendChild(row);
  });
 }
+
 function renderCountdown(now=new Date()){
- const rem=Math.max(0,EXAM.getTime()-now.getTime()),sec=Math.floor(rem/1000);
- const days=Math.floor(sec/86400),hours=Math.floor(sec%86400/3600),mins=Math.floor(sec%3600/60),seconds=sec%60;
+ const rem=Math.max(0,EXAM.getTime()-now.getTime());
+ const sec=Math.floor(rem/1000);
+ const days=Math.floor(sec/86400);
+ const hours=Math.floor(sec%86400/3600);
+ const mins=Math.floor(sec%3600/60);
+ const seconds=sec%60;
+
  $('cdDays').textContent=String(days).padStart(3,'0');
  $('cdHours').textContent=String(hours).padStart(2,'0');
  $('cdMinutes').textContent=String(mins).padStart(2,'0');
  $('cdSeconds').textContent=String(seconds).padStart(2,'0');
- ['statCountdown','statCountdown2'].forEach(id=>$(id).textContent=String(days).padStart(3,'0'));
- const span=EXAM.getTime()-START.getTime(),elapsed=Math.max(0,now.getTime()-START.getTime());
+
+ ['statCountdown','statCountdown2'].forEach(id=>{
+  $(id).textContent=String(days).padStart(3,'0');
+ });
+
+ const span=EXAM.getTime()-START.getTime();
+ const elapsed=Math.max(0,now.getTime()-START.getTime());
  const pct=Math.max(0,Math.min(100,elapsed/span*100));
- $('countdownProgress').style.width=pct+'%';$('countdownPercent').textContent=rem===0?'Exam day':pct.toFixed(1)+'% elapsed';
+
+ $('countdownProgress').style.width=pct+'%';
+ $('countdownPercent').textContent=rem===0?'Exam day':pct.toFixed(1)+'% elapsed';
 }
+
 function renderRoadmapStats(){
- const completed=dates.filter(d=>state.checkedDays[d.key]).length,pct=completed/TOTAL_DAYS*100;
+ const completed=dates.filter(d=>state.checkedDays[d.key]).length;
+ const pct=completed/TOTAL_DAYS*100;
+
  $('dailyProgress').textContent=`${completed} / ${TOTAL_DAYS}`;
  $('statRoadmap').textContent=pct.toFixed(1)+'%';
  $('statRoadmapBar').style.width=pct+'%';
@@ -487,40 +595,98 @@ function renderRoadmapStats(){
  $('sideProgress').textContent=`${completed} / ${TOTAL_DAYS}`;
  $('sideProgressBar').style.width=pct+'%';
  $('statRoadmap2').textContent=pct.toFixed(1)+'%';
+
  const today=keyOf(new Date());
- $('todayStatus').textContent=today<keyOf(START)||today>keyOf(END)?'Today is outside the current checklist dates.':state.checkedDays[today]?'Today’s target is marked complete. Keep the streak alive.':'Today is on your checklist. Choose your target and execute.';
+
+ $('todayStatus').textContent=
+  today<keyOf(START)||today>keyOf(END)
+   ?'Today is outside the current checklist dates.'
+   :state.checkedDays[today]
+    ?'Today’s target is marked complete. Keep the streak alive.'
+    :'Today is on your checklist. Choose your target and execute.';
 }
+
 function renderStats(now=Date.now()){
- const total=currentTotal(now),elapsedDays=Math.max(1,Math.floor((new Date(new Date().setHours(0,0,0,0)).getTime()-new Date(state.createdAt).setHours(0,0,0,0))/DAY)+1);
+ const total=currentTotal(now);
+ const elapsedDays=Math.max(
+  1,
+  Math.floor(
+   (new Date(new Date().setHours(0,0,0,0)).getTime()-
+   new Date(state.createdAt).setHours(0,0,0,0))/DAY
+  )+1
+ );
  const avg=total/elapsedDays;
- $('statTotal').textContent=compact(total);$('statAverage').textContent=compact(avg);
- $('statTotal2').textContent=compact(total);$('statAverage2').textContent=compact(avg);
+
+ $('statTotal').textContent=compact(total);
+ $('statAverage').textContent=compact(avg);
+ $('statTotal2').textContent=compact(total);
+ $('statAverage2').textContent=compact(avg);
 }
+
 function renderCalendar(){
- const root=$('calendarList');root.innerHTML='';
- const today=keyOf(new Date()),frag=document.createDocumentFragment();
+ const root=$('calendarList');
+ root.innerHTML='';
+
+ const today=keyOf(new Date());
+ const frag=document.createDocumentFragment();
  const visible=dates.filter(d=>monthFilter==='all'||d.key.startsWith(monthFilter));
+
  visible.forEach(d=>{
-  const checked=!!state.checkedDays[d.key],isToday=d.key===today;
-  const row=document.createElement('div');row.className='day'+(checked?' done':'');row.dataset.date=d.key;
-  const idx=document.createElement('span');idx.className='day-index';idx.textContent='#'+d.index;
-  const info=document.createElement('div');info.className='min-w-0';
-  const date=document.createElement('div');date.className='date-label text-xs font-medium '+(isToday&&!checked?'text-yellow-200':'text-gray-200');
-  date.textContent=d.date.toLocaleDateString('en-IN',{weekday:'short',day:'2-digit',month:'short',year:'numeric'});
-  const sub=document.createElement('div');sub.className='text-[9px] text-gray-500 mono mt-1';
-  sub.textContent=isToday?'TODAY · TARGET DAY':checked?'COMPLETED':d.key<today?'PAST TARGET':'UPCOMING';
-  info.append(date,sub);
-  const check=document.createElement('input');check.type='checkbox';check.className='daycheck';check.checked=checked;check.setAttribute('aria-label',`Complete day ${d.index}, ${d.key}`);
-  check.addEventListener('change',()=>{
-   if(check.checked)state.checkedDays[d.key]=true;else delete state.checkedDays[d.key];
-   save();renderCalendar();renderRoadmapStats();
+  const checked=!!state.checkedDays[d.key];
+  const isToday=d.key===today;
+
+  const row=document.createElement('div');
+  row.className='day'+(checked?' done':'');
+  row.dataset.date=d.key;
+
+  const idx=document.createElement('span');
+  idx.className='day-index';
+  idx.textContent='#'+d.index;
+
+  const info=document.createElement('div');
+  info.className='min-w-0';
+
+  const date=document.createElement('div');
+  date.className='date-label text-xs font-medium '+(isToday&&!checked?'text-yellow-200':'text-gray-200');
+  date.textContent=d.date.toLocaleDateString('en-IN',{
+   weekday:'short',day:'2-digit',month:'short',year:'numeric'
   });
+
+  const sub=document.createElement('div');
+  sub.className='text-[9px] text-gray-500 mono mt-1';
+  sub.textContent=isToday?'TODAY · TARGET DAY':checked?'COMPLETED':d.key<today?'PAST TARGET':'UPCOMING';
+
+  info.append(date,sub);
+
+  const check=document.createElement('input');
+  check.type='checkbox';
+  check.className='daycheck';
+  check.checked=checked;
+  check.setAttribute('aria-label',`Complete day ${d.index}, ${d.key}`);
+
+  check.addEventListener('change',()=>{
+   if(check.checked)state.checkedDays[d.key]=true;
+   else delete state.checkedDays[d.key];
+
+   save();
+   renderCalendar();
+   renderRoadmapStats();
+  });
+
   row.append(idx,info,check);
-  row.addEventListener('click',e=>{if(e.target===check)return;check.checked=!check.checked;check.dispatchEvent(new Event('change'))});
+
+  row.addEventListener('click',e=>{
+   if(e.target===check)return;
+   check.checked=!check.checked;
+   check.dispatchEvent(new Event('change'));
+  });
+
   frag.appendChild(row);
  });
+
  root.appendChild(frag);
 }
+
 function setMonthFilterButtons(){
  document.querySelectorAll('.month-filter').forEach(b=>{
   const active=b.dataset.month===monthFilter;
@@ -530,82 +696,255 @@ function setMonthFilterButtons(){
   b.classList.toggle('text-gray-400',!active);
  });
 }
+
 function jumpDate(dateKey){
- if(dateKey<keyOf(START)||dateKey>keyOf(END)){toast('That date is outside the checklist.');return}
+ if(dateKey<keyOf(START)||dateKey>keyOf(END)){
+  toast('That date is outside the checklist.');
+  return;
+ }
+
  showView('calendar');
- monthFilter='all';setMonthFilterButtons();renderCalendar();
+ monthFilter='all';
+ setMonthFilterButtons();
+ renderCalendar();
+
  setTimeout(()=>{
   const row=$('calendarList').querySelector(`[data-date="${dateKey}"]`);
-  if(row){row.scrollIntoView({behavior:'smooth',block:'center'});row.style.background='#f5d54712';setTimeout(()=>row.style.background='',1800)}
+  if(row){
+   row.scrollIntoView({behavior:'smooth',block:'center'});
+   row.style.background='#f5d54712';
+   setTimeout(()=>row.style.background='',1800);
+  }
  },100);
 }
-function jumpToday(){const t=keyOf(new Date());jumpDate(t)}
-function renderAll(now=Date.now()){
- renderTimer(now);renderCountdown(new Date(now));renderStats(now);renderRoadmapStats();
- $('currentDate').textContent=new Date().toLocaleDateString('en-IN',{day:'2-digit',month:'short',year:'numeric'});
- $('footerDate').textContent=new Date().toLocaleDateString('en-IN',{weekday:'long',day:'2-digit',month:'short',year:'numeric'}).toUpperCase();
+
+function jumpToday(){
+ const t=keyOf(new Date());
+ jumpDate(t);
 }
+
+function renderAll(now=Date.now()){
+ renderTimer(now);
+ renderCountdown(new Date(now));
+ renderStats(now);
+ renderRoadmapStats();
+
+ $('currentDate').textContent=new Date().toLocaleDateString('en-IN',{
+  day:'2-digit',month:'short',year:'numeric'
+ });
+
+ $('footerDate').textContent=new Date().toLocaleDateString('en-IN',{
+  weekday:'long',day:'2-digit',month:'short',year:'numeric'
+ }).toUpperCase();
+}
+
 function showView(name){
- document.querySelectorAll('.panel-view').forEach(v=>v.classList.toggle('active',v.id==='view-'+name));
- document.querySelectorAll('.nav button').forEach(b=>b.classList.toggle('active',b.dataset.view===name));
+ document.querySelectorAll('.panel-view').forEach(v=>{
+  v.classList.toggle('active',v.id==='view-'+name);
+ });
+ document.querySelectorAll('.nav button').forEach(b=>{
+  b.classList.toggle('active',b.dataset.view===name);
+ });
  window.scrollTo({top:0,behavior:'smooth'});
 }
-document.querySelectorAll('.nav button').forEach(b=>b.addEventListener('click',()=>showView(b.dataset.view)));
-document.querySelectorAll('[data-open-calendar]').forEach(b=>b.addEventListener('click',()=>{monthFilter='all';setMonthFilterButtons();renderCalendar();showView('calendar')}));
-document.querySelectorAll('[data-jump]').forEach(b=>b.addEventListener('click',()=>jumpDate(b.dataset.jump)));
 
+document.querySelectorAll('.nav button').forEach(b=>{
+ b.addEventListener('click',()=>showView(b.dataset.view));
+});
+
+document.querySelectorAll('[data-open-calendar]').forEach(b=>{
+ b.addEventListener('click',()=>{
+  monthFilter='all';
+  setMonthFilterButtons();
+  renderCalendar();
+  showView('calendar');
+ });
+});
+
+document.querySelectorAll('[data-jump]').forEach(b=>{
+ b.addEventListener('click',()=>jumpDate(b.dataset.jump));
+});
+
+// Start / Pause: session time is preserved but not yet added to permanent totals.
 $('startPauseBtn').addEventListener('click',()=>{
- if(state.running){checkpoint();state.running=false;state.startedAt=null;save();renderAll();toast('Timer paused. Progress saved.')}
- else{state.running=true;state.startedAt=Date.now();save();renderAll();toast('Focus session started.')}
+ if(state.running){
+  checkpoint();
+  state.running=false;
+  state.startedAt=null;
+  save();
+  renderAll();
+  toast('Timer paused. Session saved locally; press Save session to log it.');
+ }else{
+  state.running=true;
+  state.startedAt=Date.now();
+  save();
+  renderAll();
+  toast('Focus session started.');
+ }
 });
+
+// SAVE SESSION: commit this session to cumulative totals, then reset the session timer.
 $('resetBtn').addEventListener('click',()=>{
- if(!confirm('Reset all accumulated study time for every subject? Your checklist will remain untouched.'))return;
- state.running=false;state.startedAt=null;state.totalMs=0;SUBJECTS.forEach(s=>state.subjectMs[s.name]=0);
- save();renderAll();toast('Study timers reset.');
+ checkpoint();
+
+ const session=Math.max(0,state.sessionMs||0);
+
+ if(session<=0){
+  toast('No study time to save.');
+  return;
+ }
+
+ const subject=state.activeSubject;
+
+ // Commit session time to the permanent overall total and selected subject.
+ state.totalMs+=session;
+ state.subjectMs[subject]=(state.subjectMs[subject]||0)+session;
+
+ // Clear only the current session. Permanent totals remain untouched.
+ state.sessionMs=0;
+ state.running=false;
+ state.startedAt=null;
+
+ const stored=save();
+ renderAll();
+
+ if(stored){
+  toast(`${compact(session)} saved to ${subject}. Timer reset.`);
+ }else{
+  toast('Session committed in memory, but storage failed. Export a backup.');
+ }
 });
-document.querySelectorAll('.subject').forEach(b=>b.addEventListener('click',()=>{
- const name=b.dataset.subject;if(name===state.activeSubject)return;
- checkpoint();state.activeSubject=name;save();renderAll();toast(name+' selected.');
-}));
-document.querySelectorAll('.month-filter').forEach(b=>b.addEventListener('click',()=>{
- monthFilter=b.dataset.month;setMonthFilterButtons();renderCalendar();
-}));
+
+// Select subject. Save the current session before switching if you want to
+// attribute it to the subject currently being studied.
+document.querySelectorAll('.subject').forEach(b=>{
+ b.addEventListener('click',()=>{
+  const name=b.dataset.subject;
+  if(name===state.activeSubject)return;
+
+  checkpoint();
+  state.activeSubject=name;
+  save();
+  renderAll();
+  toast(name+' selected. Save the session to log its time.');
+ });
+});
+
+document.querySelectorAll('.month-filter').forEach(b=>{
+ b.addEventListener('click',()=>{
+  monthFilter=b.dataset.month;
+  setMonthFilterButtons();
+  renderCalendar();
+ });
+});
+
 $('jumpToday').addEventListener('click',jumpToday);
+
 $('uncheckAll').addEventListener('click',()=>{
- const n=Object.keys(state.checkedDays).length;if(!n){toast('No checked days to clear.');return}
+ const n=Object.keys(state.checkedDays).length;
+
+ if(!n){
+  toast('No checked days to clear.');
+  return;
+ }
+
  if(!confirm(`Clear all ${n} completed days? Study time will remain untouched.`))return;
- state.checkedDays={};save();renderCalendar();renderRoadmapStats();toast('Checklist cleared.');
+
+ state.checkedDays={};
+ save();
+ renderCalendar();
+ renderRoadmapStats();
+ toast('Checklist cleared.');
 });
 
 function exportData(){
- checkpoint();save();
- const blob=new Blob([JSON.stringify({app:'JEE 2027 Campaign',exportedAt:new Date().toISOString(),state},null,2)],{type:'application/json'});
- const url=URL.createObjectURL(blob),a=document.createElement('a');
- a.href=url;a.download='jee-2027-backup-'+keyOf(new Date())+'.json';document.body.appendChild(a);a.click();a.remove();setTimeout(()=>URL.revokeObjectURL(url),1000);toast('Backup exported.');
+ // Preserve any elapsed time in the unsaved session without committing it.
+ checkpoint();
+ save();
+
+ const blob=new Blob([
+  JSON.stringify({
+   app:'JEE 2027 Campaign',
+   exportedAt:new Date().toISOString(),
+   state
+  },null,2)
+ ],{type:'application/json'});
+
+ const url=URL.createObjectURL(blob);
+ const a=document.createElement('a');
+ a.href=url;
+ a.download='jee-2027-backup-'+keyOf(new Date())+'.json';
+ document.body.appendChild(a);
+ a.click();
+ a.remove();
+
+ setTimeout(()=>URL.revokeObjectURL(url),1000);
+ toast('Backup exported.');
 }
-function openImport(){$('importFile').click()}
-$('exportBtn').addEventListener('click',exportData);$('exportBtn2').addEventListener('click',exportData);
-$('importBtn').addEventListener('click',openImport);$('importBtn2').addEventListener('click',openImport);
+
+function openImport(){
+ $('importFile').click();
+}
+
+$('exportBtn').addEventListener('click',exportData);
+$('exportBtn2').addEventListener('click',exportData);
+$('importBtn').addEventListener('click',openImport);
+$('importBtn2').addEventListener('click',openImport);
+
 $('importFile').addEventListener('change',async e=>{
- const file=e.target.files?.[0];if(!file)return;
+ const file=e.target.files?.[0];
+ if(!file)return;
+
  try{
-  const data=JSON.parse(await file.text()),raw=data.state||data;
+  const data=JSON.parse(await file.text());
+  const raw=data.state||data;
+
   if(!raw.subjectMs||!raw.checkedDays)throw new Error('Invalid backup');
+
   if(!confirm('Replace current study times and checklist with this backup?'))return;
-  state=normalize(raw);save();renderCalendar();renderAll();toast('Backup imported.');
- }catch(err){console.error(err);toast('Import failed. Choose a valid JSON backup.')}
- finally{e.target.value=''}
+
+  state=normalize(raw);
+  save();
+  renderCalendar();
+  renderAll();
+  toast('Backup imported.');
+ }catch(err){
+  console.error(err);
+  toast('Import failed. Choose a valid JSON backup.');
+ }finally{
+  e.target.value='';
+ }
 });
+
+// Persist timer state when leaving the page or switching tabs.
 window.addEventListener('pagehide',flush);
-document.addEventListener('visibilitychange',()=>{if(document.hidden)flush();else renderAll()});
+
+document.addEventListener('visibilitychange',()=>{
+ if(document.hidden)flush();
+ else renderAll();
+});
+
 window.addEventListener('beforeunload',flush);
 
-renderCalendar();setMonthFilterButtons();renderAll();save();
+// Initial render.
+renderCalendar();
+setMonthFilterButtons();
+renderAll();
+save();
+
+// Regular checkpoints update the unsaved session and persist it locally.
+// This means a refresh will not discard the in-progress timer.
 setInterval(()=>{
  if(state.running)checkpoint();
+
  renderAll();
- if(Date.now()-lastSave>1000){save();lastSave=Date.now()}
+
+ if(Date.now()-lastSave>1000){
+  save();
+  lastSave=Date.now();
+ }
 },37);
+
 })();
 </script>
 </body>
