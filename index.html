@@ -1,0 +1,612 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="theme-color" content="#080a12">
+<title>JEE 2027 | The Final Campaign</title>
+<script src="https://cdn.tailwindcss.com"></script>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css">
+<link href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@400;500&family=Inter:wght@400;500;600;700;800&family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#080a12;--panel:rgba(15,19,31,.79);--line:rgba(255,255,255,.09);--yellow:#f5d547;--blue:#80aaff;--orange:#ff997b;--green:#64e0bd;--purple:#c0a0ff}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:#f2f3f8;font-family:Inter,sans-serif;min-height:100vh}
+button,input{font:inherit}button{cursor:pointer}
+.wallpaper{position:fixed;inset:0;z-index:-3;background:#080a12}
+.wallpaper:before{content:"";position:absolute;inset:0;background-image:linear-gradient(90deg,rgba(5,7,14,.91),rgba(5,7,14,.73) 45%,rgba(5,7,14,.88)),linear-gradient(0deg,#080a12 0%,transparent 60%),url("https://images.unsplash.com/photo-1519608487953-e999c86e7455?auto=format&fit=crop&w=2400&q=90");background-position:center;background-size:cover;opacity:.78}
+.wallpaper:after{content:"";position:absolute;inset:0;background:radial-gradient(ellipse at 65% 20%,rgba(100,125,255,.17),transparent 35%),radial-gradient(ellipse at 10% 65%,rgba(129,75,210,.12),transparent 32%),linear-gradient(125deg,transparent 50%,rgba(255,213,71,.035));}
+*{scrollbar-width:thin;scrollbar-color:#42485b transparent}
+.glass{background:var(--panel);border:1px solid var(--line);backdrop-filter:blur(22px);-webkit-backdrop-filter:blur(22px);box-shadow:0 18px 55px #0003}
+.mono{font-family:"DM Mono",monospace;font-variant-numeric:tabular-nums}
+.display{font-family:"Space Grotesk",sans-serif}
+.eyebrow{font:500 10px "DM Mono",monospace;letter-spacing:.19em;color:#858da2}
+.layout{display:grid;grid-template-columns:minmax(0,1fr) 355px;gap:22px;align-items:start}
+.sidebar{position:sticky;top:18px}
+.hero{position:relative;overflow:hidden}
+.hero:before{content:"";position:absolute;inset:0;background:linear-gradient(115deg,rgba(11,15,28,.2),rgba(40,44,74,.05) 50%,rgba(10,12,20,.5));pointer-events:none}
+.hero-glow{position:absolute;width:420px;height:420px;right:0;top:-250px;border-radius:50%;background:#7186ff1a;filter:blur(30px)}
+.timer{font:400 clamp(48px,5.4vw,88px) "DM Mono",monospace;letter-spacing:-.075em;line-height:1}
+.btn{transition:.2s ease}
+.btn:hover{transform:translateY(-1px);filter:brightness(1.1)}
+.primary{background:var(--yellow);color:#15150e;box-shadow:0 0 28px #f5d54714}
+.secondary{background:#ffffff08;border:1px solid var(--line);color:#e7e9f2}
+.nav{display:flex;gap:5px;padding:5px;background:#ffffff07;border:1px solid var(--line);border-radius:15px}
+.nav button{border-radius:10px;padding:10px 15px;font-size:12px;color:#9ca3b6;white-space:nowrap}
+.nav button.active{background:var(--yellow);color:#17170f;font-weight:700}
+.subject{position:relative;overflow:hidden;text-align:left;padding:18px;border-radius:15px;background:#ffffff05;border:1px solid var(--line);transition:.2s}
+.subject:hover{background:#ffffff0b;transform:translateY(-2px)}
+.subject.active{background:var(--tint);border-color:var(--color);box-shadow:inset 0 0 0 1px var(--color)}
+.subject.active:before{content:"";position:absolute;left:0;top:15px;bottom:15px;width:3px;background:var(--color);border-radius:3px}
+.dot{height:8px;width:8px;border-radius:50%;background:var(--color);box-shadow:0 0 12px var(--color)}
+.countbox{border:1px solid #ffffff09;background:#ffffff07;border-radius:12px;text-align:center;padding:13px 3px}
+.countnum{font:500 25px "DM Mono",monospace;letter-spacing:-.06em}
+.countlabel{font:9px "DM Mono",monospace;letter-spacing:.14em;color:#7c8498;margin-top:5px}
+.bar{height:5px;background:#ffffff0d;border-radius:20px;overflow:hidden}
+.bar>div{height:100%;border-radius:20px;transition:width .3s}
+.checklist{max-height:590px;overflow:auto;overscroll-behavior:contain}
+.day{display:grid;grid-template-columns:38px 1fr 28px;gap:12px;align-items:center;padding:12px 15px;border-bottom:1px solid #ffffff07;cursor:pointer}
+.day:hover{background:#ffffff06}
+.day.done .date-label{color:#747b8c;text-decoration:line-through}
+.day-index{width:33px;height:33px;display:grid;place-items:center;border:1px solid var(--line);border-radius:10px;font:11px "DM Mono",monospace;color:#a6acc0}
+.day.done .day-index{color:var(--green);border-color:#64e0bd44}
+.daycheck{appearance:none;width:19px;height:19px;border:1px solid #555d70;border-radius:6px;display:grid;place-items:center;background:#ffffff04;cursor:pointer}
+.daycheck:checked{background:var(--green);border-color:var(--green)}
+.daycheck:checked:after{content:"✓";font-size:12px;color:#07120f;font-weight:bold}
+.panel-view{display:none;animation:fade .3s ease}
+.panel-view.active{display:block}
+@keyframes fade{from{opacity:0;transform:translateY(5px)}to{opacity:1;transform:translateY(0)}}
+.plan-card{position:relative;overflow:hidden;border:1px solid var(--line);background:linear-gradient(145deg,#ffffff0b,#ffffff03);border-radius:18px;padding:24px}
+.plan-card:after{content:"";position:absolute;width:160px;height:160px;border-radius:50%;right:-85px;top:-90px;background:var(--halo,#80aaff);opacity:.1;filter:blur(10px)}
+.plan-icon{width:45px;height:45px;border:1px solid var(--color);color:var(--color);background:var(--tint);border-radius:14px;display:grid;place-items:center;font-size:18px}
+.task{display:flex;gap:10px;align-items:flex-start;padding:11px 0;border-bottom:1px solid #ffffff09;font-size:12px;line-height:1.7;color:#c5c9d5}
+.task:last-child{border:0}
+.task i{color:var(--color);margin-top:4px;font-size:11px}
+.timeline{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:10px}
+.phase{padding:17px;border:1px solid var(--line);background:#ffffff05;border-radius:14px}
+.phase-number{font:11px "DM Mono",monospace;color:var(--yellow);letter-spacing:.1em}
+.phase-date{font-size:12px;font-weight:700;margin-top:10px}
+.phase button{font-size:10px;color:#b4bbcd;margin-top:12px;text-decoration:underline;text-underline-offset:3px}
+.toast{position:fixed;bottom:25px;left:50%;transform:translate(-50%,15px);opacity:0;pointer-events:none;z-index:100;background:#202536;border:1px solid var(--line);border-radius:12px;padding:12px 18px;font-size:12px;transition:.25s;white-space:nowrap}
+.toast.show{opacity:1;transform:translate(-50%,0)}
+@media(min-width:1500px){.layout{grid-template-columns:minmax(0,1fr) 385px}.container{max-width:1580px;margin:auto}.timer{font-size:88px}}
+@media(max-width:1100px){.layout{grid-template-columns:minmax(0,1fr) 310px;gap:14px}.timer{font-size:clamp(43px,5vw,65px)}}
+@media(max-width:850px){.layout{grid-template-columns:1fr}.sidebar{position:static}.timeline{grid-template-columns:repeat(2,minmax(0,1fr))}.nav{overflow-x:auto}.hero{padding:22px!important}}
+@media(max-width:500px){.timeline{grid-template-columns:1fr 1fr}.timer{font-size:37px}.countnum{font-size:20px}.plan-card{padding:18px}}
+button:focus-visible,input:focus-visible{outline:2px solid var(--yellow);outline-offset:3px}
+</style>
+</head>
+<body>
+<div class="wallpaper"></div>
+
+<div class="container px-4 sm:px-6 lg:px-9 py-5 sm:py-7">
+<header class="flex flex-wrap items-center justify-between gap-5 mb-7">
+  <div class="flex items-center gap-3">
+    <span class="w-2 h-2 rounded-full bg-yellow-300 shadow-[0_0_15px_#f5d547]"></span>
+    <div>
+      <div class="eyebrow text-white">JEE 2027 <span class="text-gray-600">/ PERSONAL COMMAND CENTER</span></div>
+      <div class="display text-sm font-semibold mt-1">THE FINAL CAMPAIGN <span class="text-yellow-300">↗</span></div>
+    </div>
+  </div>
+  <nav class="nav" aria-label="Main navigation">
+    <button class="active" data-view="dashboard"><i class="fa-solid fa-gauge-high mr-2"></i>Dashboard</button>
+    <button data-view="roadmap"><i class="fa-solid fa-route mr-2"></i>Roadmap</button>
+    <button data-view="calendar"><i class="fa-regular fa-calendar mr-2"></i>Daily</button>
+    <button data-view="stats"><i class="fa-solid fa-chart-simple mr-2"></i>Stats</button>
+  </nav>
+</header>
+
+<div class="layout">
+<main class="min-w-0">
+
+<!-- DASHBOARD -->
+<section id="view-dashboard" class="panel-view active space-y-5">
+  <section class="glass hero rounded-3xl p-7 lg:p-10">
+    <div class="hero-glow"></div>
+    <div class="relative">
+      <div class="flex justify-between items-start gap-4 mb-10">
+        <div>
+          <div class="eyebrow mb-3">01 / FOCUS PROTOCOL</div>
+          <h1 class="display text-2xl sm:text-3xl font-semibold tracking-tight">Earn your future.</h1>
+          <p class="text-xs text-gray-400 mt-2">No noise. No excuses. Just the next session.</p>
+        </div>
+        <div class="rounded-full px-3 py-2 bg-white/[.04] border border-white/10 flex items-center gap-2 text-[10px] mono">
+          <span id="statusDot" class="w-2 h-2 rounded-full bg-gray-500"></span><span id="statusText">PAUSED</span>
+        </div>
+      </div>
+
+      <div class="eyebrow mb-4">TOTAL ACCUMULATED STUDY TIME</div>
+      <div class="flex items-baseline flex-wrap gap-2">
+        <div id="totalTime" class="timer">00:00:00</div>
+        <div id="milliseconds" class="mono text-lg sm:text-2xl text-gray-500">.000</div>
+      </div>
+      <div class="flex gap-4 sm:gap-7 mt-4 mb-8 eyebrow text-[9px]"><span>HOURS</span><span>MINUTES</span><span>SECONDS</span><span>MILLISECONDS</span></div>
+
+      <div class="flex items-center flex-wrap gap-3">
+        <button id="startPauseBtn" class="btn primary rounded-full w-14 h-14 flex items-center justify-center text-xl" aria-label="Start timer"><i id="startPauseIcon" class="fa-solid fa-play ml-1"></i></button>
+        <button id="resetBtn" class="btn secondary rounded-full px-5 py-3 text-xs"><i class="fa-solid fa-rotate-left mr-2"></i>Reset time</button>
+        <div class="ml-auto text-right">
+          <div class="eyebrow mb-1">CURRENTLY STUDYING</div>
+          <div id="activeSubjectLabel" class="font-semibold text-sm">Chemistry</div>
+        </div>
+      </div>
+      <div class="flex items-center gap-2 mt-5 text-[10px] text-gray-500"><i class="fa-solid fa-shield-halved"></i><span id="saveStatus">Progress saved locally.</span></div>
+    </div>
+  </section>
+
+  <section class="glass rounded-2xl p-5 sm:p-6">
+    <div class="flex items-center justify-between mb-5 gap-3">
+      <div><div class="eyebrow mb-1">02 / SUBJECT CONTROL</div><h2 class="display text-lg font-semibold">Select your subject.</h2></div>
+      <span class="eyebrow">4 TRACKS</span>
+    </div>
+    <div class="grid grid-cols-2 gap-3" id="subjectGrid">
+      <button class="subject" data-subject="Physics" style="--color:#80aaff;--tint:#80aaff14">
+        <div class="flex justify-between items-center mb-5"><span class="text-sm font-semibold">Physics</span><span class="dot"></span></div>
+        <div class="mono text-xl" data-subject-time="Physics">00:00:00</div><div class="text-[10px] text-gray-500 mt-2">Focused hours</div>
+      </button>
+      <button class="subject active" data-subject="Chemistry" style="--color:#ff997b;--tint:#ff997b14">
+        <div class="flex justify-between items-center mb-5"><span class="text-sm font-semibold">Chemistry</span><span class="dot"></span></div>
+        <div class="mono text-xl" data-subject-time="Chemistry">00:00:00</div><div class="text-[10px] text-gray-500 mt-2">Focused hours</div>
+      </button>
+      <button class="subject" data-subject="Mathematics" style="--color:#f5d547;--tint:#f5d54712">
+        <div class="flex justify-between items-center mb-5"><span class="text-sm font-semibold">Mathematics</span><span class="dot"></span></div>
+        <div class="mono text-xl" data-subject-time="Mathematics">00:00:00</div><div class="text-[10px] text-gray-500 mt-2">Focused hours</div>
+      </button>
+      <button class="subject" data-subject="Test / Mock" style="--color:#64e0bd;--tint:#64e0bd12">
+        <div class="flex justify-between items-center mb-5"><span class="text-sm font-semibold">Test / Mock</span><span class="dot"></span></div>
+        <div class="mono text-xl" data-subject-time="Test / Mock">00:00:00</div><div class="text-[10px] text-gray-500 mt-2">Focused hours</div>
+      </button>
+    </div>
+    <div class="mt-5 pt-4 border-t border-white/[.07]">
+      <div class="flex justify-between text-[10px] text-gray-400 mb-3"><span>STUDY DISTRIBUTION</span><span id="subjectTotalLabel" class="mono">0h</span></div>
+      <div id="subjectDistribution" class="flex gap-1 h-1.5 overflow-hidden rounded-full"></div>
+      <div id="subjectLegend" class="grid grid-cols-2 lg:grid-cols-4 gap-2 mt-3"></div>
+    </div>
+  </section>
+
+  <section class="grid grid-cols-2 gap-3">
+    <div class="glass rounded-2xl p-5"><div class="eyebrow mb-3">TOTAL STUDY TIME</div><div id="statTotal" class="display text-2xl font-semibold">0h 00m</div><div class="text-[10px] text-gray-500 mt-2">All subjects combined</div></div>
+    <div class="glass rounded-2xl p-5"><div class="eyebrow mb-3">DAILY AVERAGE</div><div id="statAverage" class="display text-2xl font-semibold">0m</div><div class="text-[10px] text-gray-500 mt-2">Since first use</div></div>
+  </section>
+</section>
+
+<!-- ROADMAP -->
+<section id="view-roadmap" class="panel-view space-y-5">
+  <section class="glass rounded-3xl p-6 sm:p-9 relative overflow-hidden">
+    <div class="absolute right-0 top-0 w-72 h-72 rounded-full bg-violet-500/[.08] blur-3xl"></div>
+    <div class="relative">
+      <div class="eyebrow mb-3">YOUR STRATEGY / 14 OCT — 20 JAN</div>
+      <div class="flex flex-wrap items-end justify-between gap-4">
+        <div><h1 class="display text-3xl sm:text-4xl font-semibold">The 16-hour<br><span class="text-yellow-300">campaign.</span></h1><p class="text-sm text-gray-400 mt-4 max-w-lg leading-6">One full Mathematics block every day. Physics and Chemistry alternate daily. Execute the plan, track the hours, and keep moving.</p></div>
+        <div class="glass rounded-2xl p-4 min-w-[125px]"><div class="eyebrow">DAILY TARGET</div><div class="display text-3xl font-semibold mt-2">16<span class="text-sm text-gray-400"> h</span></div><div class="text-[10px] text-gray-500 mt-1">Study allocation</div></div>
+      </div>
+    </div>
+  </section>
+
+  <section class="grid sm:grid-cols-3 gap-3">
+    <div class="plan-card" style="--color:#f5d547;--tint:#f5d54712;--halo:#f5d547">
+      <div class="plan-icon"><i class="fa-solid fa-calculator"></i></div>
+      <div class="eyebrow mt-5">EVERY SINGLE DAY</div><div class="display text-2xl font-semibold mt-2">Mathematics</div>
+      <div class="display text-4xl font-semibold mt-4">8<span class="text-base text-gray-400"> hours</span></div>
+      <div class="bar mt-4"><div style="width:50%;background:#f5d547"></div></div>
+      <p class="text-xs text-gray-400 mt-4 leading-5">Prayas 2.0 main batch + PW Mission 100.</p>
+    </div>
+    <div class="plan-card" style="--color:#80aaff;--tint:#80aaff12;--halo:#80aaff">
+      <div class="plan-icon"><i class="fa-solid fa-atom"></i></div>
+      <div class="eyebrow mt-5">ALTERNATE DAYS</div><div class="display text-2xl font-semibold mt-2">Physics</div>
+      <div class="display text-4xl font-semibold mt-4">8<span class="text-base text-gray-400"> hours</span></div>
+      <div class="bar mt-4"><div style="width:50%;background:#80aaff"></div></div>
+      <p class="text-xs text-gray-400 mt-4 leading-5">Vinay Uppal Sir lectures + PYQs and question solving.</p>
+    </div>
+    <div class="plan-card" style="--color:#ff997b;--tint:#ff997b12;--halo:#ff997b">
+      <div class="plan-icon"><i class="fa-solid fa-flask"></i></div>
+      <div class="eyebrow mt-5">ALTERNATE DAYS</div><div class="display text-2xl font-semibold mt-2">Chemistry</div>
+      <div class="display text-4xl font-semibold mt-4">8<span class="text-base text-gray-400"> hours</span></div>
+      <div class="bar mt-4"><div style="width:50%;background:#ff997b"></div></div>
+      <p class="text-xs text-gray-400 mt-4 leading-5">Organic Chemistry batch + Inorganic and Physical one-shots.</p>
+    </div>
+  </section>
+
+  <section class="glass rounded-2xl p-5 sm:p-7">
+    <div class="eyebrow mb-2">01 / DAILY EXECUTION</div><h2 class="display text-xl font-semibold">Your 16-hour blueprint.</h2>
+    <p class="text-xs text-gray-400 mt-2 mb-5">Use this as a target allocation, not a reason to sacrifice sleep. Breaks and revision matter.</p>
+    <div class="grid lg:grid-cols-2 gap-4">
+      <div class="rounded-xl border border-yellow-300/20 bg-yellow-300/[.035] p-5">
+        <div class="flex justify-between items-center"><div class="font-semibold text-sm text-yellow-200">Mathematics</div><div class="mono text-xs text-yellow-200">8H / DAILY</div></div>
+        <div class="task" style="--color:#f5d547"><i class="fa-solid fa-play"></i><div><b class="text-gray-200">Prayas 2.0 — Main Batch</b><br>Lectures, notes, solved examples and the batch questions.</div></div>
+        <div class="task" style="--color:#f5d547"><i class="fa-solid fa-list-check"></i><div><b class="text-gray-200">PW Mission 100</b><br>Lectures and the associated questions. Include practice and revision rather than passively watching.</div></div>
+        <div class="task" style="--color:#f5d547"><i class="fa-solid fa-rotate"></i><div><b class="text-gray-200">Consolidation</b><br>Review mistakes, formulas and unsolved questions within the 8-hour block.</div></div>
+      </div>
+      <div class="rounded-xl border border-blue-300/20 bg-blue-300/[.035] p-5">
+        <div class="flex justify-between items-center"><div class="font-semibold text-sm text-blue-200">Physics</div><div class="mono text-xs text-blue-200">8H / ALT DAYS</div></div>
+        <div class="task" style="--color:#80aaff"><i class="fa-solid fa-play"></i><div><b class="text-gray-200">Vinay Uppal Sir</b><br>Target roughly 3–4 hours of lectures, depending on the chapter.</div></div>
+        <div class="task" style="--color:#80aaff"><i class="fa-solid fa-pen-to-square"></i><div><b class="text-gray-200">PYQs + problem solving</b><br>Target about 4 hours of active solving, checking solutions and correcting mistakes.</div></div>
+        <div class="task" style="--color:#80aaff"><i class="fa-solid fa-book-open"></i><div><b class="text-gray-200">Remaining time</b><br>Use the remaining time for lecture notes, revision and unfinished questions.</div></div>
+      </div>
+      <div class="rounded-xl border border-orange-300/20 bg-orange-300/[.035] p-5 lg:col-span-2">
+        <div class="flex justify-between items-center gap-3"><div class="font-semibold text-sm text-orange-200">Chemistry</div><div class="mono text-xs text-orange-200">8H / ALT DAYS</div></div>
+        <div class="grid sm:grid-cols-3 gap-x-6">
+          <div class="task" style="--color:#ff997b"><i class="fa-solid fa-play"></i><div><b class="text-gray-200">Organic Chemistry</b><br>Prayas 2.0 batch. Allocate around 2.5–4 hours to lectures, notes and questions.</div></div>
+          <div class="task" style="--color:#ff997b"><i class="fa-solid fa-flask"></i><div><b class="text-gray-200">Inorganic Chemistry</b><br>One-shot lectures, NCERT-focused study and question practice.</div></div>
+          <div class="task" style="--color:#ff997b"><i class="fa-solid fa-vial"></i><div><b class="text-gray-200">Physical Chemistry</b><br>One-shot lectures, formula revision and numerical practice.</div></div>
+        </div>
+        <p class="text-[10px] text-gray-500 mt-3">Use the remaining Chemistry hours for IOC/PC according to chapter needs, PYQs and revision. The exact split can vary.</p>
+      </div>
+    </div>
+  </section>
+
+  <section class="glass rounded-2xl p-5 sm:p-7">
+    <div class="eyebrow mb-2">02 / ALTERNATING CYCLE</div><h2 class="display text-xl font-semibold">Never lose the rhythm.</h2>
+    <p class="text-xs text-gray-400 mt-2 mb-5">Maths stays daily. Physics and Chemistry switch by day, beginning with Physics on October 14, 2026.</p>
+    <div class="grid sm:grid-cols-2 gap-3">
+      <div class="rounded-xl p-5 border border-blue-300/20 bg-blue-300/[.04]">
+        <div class="text-[10px] tracking-widest text-blue-200 mono">DAY A · OCT 14</div><div class="display text-lg font-semibold mt-3">Maths + Physics</div><div class="text-xs text-gray-400 mt-2">8h Maths · 8h Physics</div>
+        <div class="flex gap-2 mt-4"><span class="rounded-full px-3 py-1 text-[10px] bg-yellow-300/10 text-yellow-200">Maths 8h</span><span class="rounded-full px-3 py-1 text-[10px] bg-blue-300/10 text-blue-200">Physics 8h</span></div>
+      </div>
+      <div class="rounded-xl p-5 border border-orange-300/20 bg-orange-300/[.04]">
+        <div class="text-[10px] tracking-widest text-orange-200 mono">DAY B · OCT 15</div><div class="display text-lg font-semibold mt-3">Maths + Chemistry</div><div class="text-xs text-gray-400 mt-2">8h Maths · 8h Chemistry</div>
+        <div class="flex gap-2 mt-4"><span class="rounded-full px-3 py-1 text-[10px] bg-yellow-300/10 text-yellow-200">Maths 8h</span><span class="rounded-full px-3 py-1 text-[10px] bg-orange-300/10 text-orange-200">Chemistry 8h</span></div>
+      </div>
+    </div>
+    <div class="mt-4 text-[11px] text-gray-500 leading-5"><i class="fa-solid fa-circle-info mr-2 text-yellow-300"></i>The subject cards above log time only for the subject you select. Switch the active subject whenever your study block changes.</div>
+  </section>
+
+  <section class="glass rounded-2xl p-5 sm:p-7">
+    <div class="eyebrow mb-2">03 / CAMPAIGN TIMELINE</div><h2 class="display text-xl font-semibold">October to January.</h2><p class="text-xs text-gray-400 mt-2 mb-5">Select any phase to open the corresponding dates in your checklist.</p>
+    <div class="timeline">
+      <div class="phase"><div class="phase-number">PHASE 01</div><div class="phase-date">Oct 14–31</div><p class="text-[11px] text-gray-400 mt-2">Build momentum and establish daily execution.</p><button data-jump="2026-10-14">Open dates ↗</button></div>
+      <div class="phase"><div class="phase-number">PHASE 02</div><div class="phase-date">Nov 01–30</div><p class="text-[11px] text-gray-400 mt-2">Finish planned chapters and practise consistently.</p><button data-jump="2026-11-01">Open dates ↗</button></div>
+      <div class="phase"><div class="phase-number">PHASE 03</div><div class="phase-date">Dec 01–31</div><p class="text-[11px] text-gray-400 mt-2">Increase PYQs, revision and timed practice.</p><button data-jump="2026-12-01">Open dates ↗</button></div>
+      <div class="phase"><div class="phase-number">PHASE 04</div><div class="phase-date">Jan 01–20</div><p class="text-[11px] text-gray-400 mt-2">Consolidate revision, mocks and error analysis.</p><button data-jump="2027-01-01">Open dates ↗</button></div>
+    </div>
+    <button class="btn primary rounded-xl px-5 py-3 mt-5 text-xs font-semibold" data-open-calendar><i class="fa-regular fa-calendar-check mr-2"></i>Open full date checklist</button>
+  </section>
+</section>
+
+<!-- CALENDAR -->
+<section id="view-calendar" class="panel-view">
+  <section class="glass rounded-2xl overflow-hidden">
+    <div class="p-6 sm:p-8">
+      <div class="eyebrow mb-2">DAILY EXECUTION / 99 DAYS</div>
+      <h1 class="display text-3xl font-semibold">The daily checklist.</h1>
+      <p class="text-sm text-gray-400 mt-3 leading-6">Mark a day complete when you've met your target. Your progress stays saved in this browser.</p>
+      <div class="grid grid-cols-3 gap-3 mt-6">
+        <div class="rounded-xl bg-white/[.035] p-4"><div class="eyebrow">COMPLETED</div><div id="dailyProgress" class="display text-2xl font-semibold text-green-300 mt-2">0 / 99</div></div>
+        <div class="rounded-xl bg-white/[.035] p-4"><div class="eyebrow">PROGRESS</div><div id="statRoadmap" class="display text-2xl font-semibold mt-2">0%</div></div>
+        <div class="rounded-xl bg-white/[.035] p-4"><div class="eyebrow">EXAM IN</div><div id="statCountdown" class="display text-2xl font-semibold mt-2">000</div><div class="text-[9px] text-gray-500">days</div></div>
+      </div>
+      <div class="bar mt-4"><div id="dailyProgressBar" style="width:0%;background:var(--green)"></div></div>
+      <div class="flex flex-wrap gap-2 mt-5" id="monthFilters">
+        <button class="month-filter secondary rounded-full px-3 py-2 text-[10px] active" data-month="all">All dates</button>
+        <button class="month-filter secondary rounded-full px-3 py-2 text-[10px]" data-month="2026-10">October</button>
+        <button class="month-filter secondary rounded-full px-3 py-2 text-[10px]" data-month="2026-11">November</button>
+        <button class="month-filter secondary rounded-full px-3 py-2 text-[10px]" data-month="2026-12">December</button>
+        <button class="month-filter secondary rounded-full px-3 py-2 text-[10px]" data-month="2027-01">January</button>
+        <button id="jumpToday" class="rounded-full px-3 py-2 text-[10px] border border-yellow-300/20 text-yellow-200">Jump to today</button>
+      </div>
+    </div>
+    <div class="border-t border-white/[.07] px-5 py-3 flex items-center justify-between"><span class="eyebrow">DATE / DAY COUNTER</span><span class="eyebrow">TARGET COMPLETE</span></div>
+    <div id="calendarList" class="checklist"></div>
+    <div class="p-5 border-t border-white/[.07] flex justify-between items-center gap-3"><span class="text-[10px] text-gray-500">All changes are saved automatically.</span><button id="uncheckAll" class="text-[10px] text-red-300/80">Clear all checks</button></div>
+  </section>
+</section>
+
+<!-- STATS -->
+<section id="view-stats" class="panel-view space-y-5">
+  <section class="glass rounded-3xl p-7 sm:p-9">
+    <div class="eyebrow mb-3">PERFORMANCE OVERVIEW</div><h1 class="display text-3xl font-semibold">Your numbers.</h1><p class="text-sm text-gray-400 mt-3">Measure your execution, not just your intentions.</p>
+    <div class="grid sm:grid-cols-2 gap-3 mt-7">
+      <div class="rounded-xl bg-white/[.035] p-5"><div class="eyebrow">TOTAL STUDY TIME</div><div id="statTotal2" class="display text-3xl font-semibold mt-3">0h 00m</div></div>
+      <div class="rounded-xl bg-white/[.035] p-5"><div class="eyebrow">DAILY AVERAGE</div><div id="statAverage2" class="display text-3xl font-semibold mt-3">0m</div></div>
+      <div class="rounded-xl bg-white/[.035] p-5"><div class="eyebrow">CHECKLIST COMPLETION</div><div id="statRoadmap2" class="display text-3xl font-semibold mt-3">0%</div><div class="bar mt-4"><div id="statRoadmapBar" style="width:0%;background:var(--green)"></div></div></div>
+      <div class="rounded-xl bg-white/[.035] p-5"><div class="eyebrow">TIME UNTIL JAN 20</div><div id="statCountdown2" class="display text-3xl font-semibold mt-3">000</div><div class="text-[10px] text-gray-500 mt-2">Days remaining</div></div>
+    </div>
+  </section>
+  <section class="glass rounded-2xl p-6"><div class="eyebrow mb-4">TIME BY SUBJECT</div><div id="statsSubjects" class="space-y-5"></div></section>
+  <section class="glass rounded-2xl p-6"><div class="eyebrow mb-3">DATA MANAGEMENT</div><p class="text-xs text-gray-400 leading-5 mb-4">Export a JSON backup before changing browsers or clearing site data. Import a previous backup to restore your logged time and checklist.</p><div class="flex flex-wrap gap-3"><button id="exportBtn" class="btn secondary rounded-xl px-4 py-3 text-xs"><i class="fa-solid fa-download mr-2"></i>Export backup</button><button id="importBtn" class="btn secondary rounded-xl px-4 py-3 text-xs"><i class="fa-solid fa-upload mr-2"></i>Import backup</button><input id="importFile" type="file" accept=".json,application/json" hidden></div></section>
+</section>
+
+</main>
+
+<!-- RIGHT SIDEBAR -->
+<aside class="sidebar space-y-5">
+  <section class="glass rounded-2xl p-5 sm:p-6">
+    <div class="flex items-center justify-between mb-5"><div><div class="eyebrow mb-1">THE DEADLINE</div><h2 class="display text-lg font-semibold">Exam countdown.</h2></div><i class="fa-solid fa-hourglass-half text-yellow-200 text-xl"></i></div>
+    <div class="grid grid-cols-4 gap-2">
+      <div class="countbox"><div id="cdDays" class="countnum">000</div><div class="countlabel">DAYS</div></div>
+      <div class="countbox"><div id="cdHours" class="countnum">00</div><div class="countlabel">HRS</div></div>
+      <div class="countbox"><div id="cdMinutes" class="countnum">00</div><div class="countlabel">MIN</div></div>
+      <div class="countbox"><div id="cdSeconds" class="countnum">00</div><div class="countlabel">SEC</div></div>
+    </div>
+    <div class="bar mt-4"><div id="countdownProgress" style="width:0;background:var(--yellow)"></div></div>
+    <div class="flex justify-between mt-2 text-[10px] text-gray-500"><span>Jan 20, 2027</span><span id="countdownPercent">Keep going</span></div>
+  </section>
+
+  <section class="glass rounded-2xl overflow-hidden">
+    <div class="p-5 pb-4">
+      <div class="eyebrow mb-1">DAILY CHECKLIST</div><h2 class="display text-lg font-semibold">Stay accountable.</h2>
+      <div class="flex justify-between items-center mt-4"><span class="text-xs text-gray-400">Completed days</span><span id="sideProgress" class="mono text-xs text-green-300">0 / 99</span></div>
+      <div class="bar mt-2"><div id="sideProgressBar" style="width:0;background:var(--green)"></div></div>
+      <button data-open-calendar class="btn secondary w-full rounded-xl py-3 mt-4 text-xs"><i class="fa-regular fa-calendar-days mr-2"></i>Open date calendar</button>
+    </div>
+    <div class="border-t border-white/[.07] p-4">
+      <div class="flex justify-between items-center"><span class="eyebrow">CURRENT DATE</span><span id="currentDate" class="text-[10px] text-gray-300"></span></div>
+      <div id="todayStatus" class="text-xs text-gray-400 mt-3 leading-5">Pick today's target and execute.</div>
+    </div>
+  </section>
+
+  <section class="glass rounded-2xl p-5">
+    <div class="eyebrow mb-3">THE PRINCIPLE</div>
+    <div class="display text-2xl font-semibold leading-tight">Ideas are <span class="text-red-300">bullets.</span><br>Execution is<br>the proof.</div>
+    <div class="mt-5 pt-4 border-t border-white/[.07] flex justify-between text-[10px] text-gray-500"><span>CONSISTENCY OVER CHAOS</span><i class="fa-solid fa-arrow-trend-up text-yellow-200"></i></div>
+  </section>
+
+  <section class="glass rounded-2xl p-5">
+    <div class="eyebrow mb-3">LOCAL STORAGE</div><div class="flex items-center gap-2 text-xs"><i class="fa-solid fa-circle-check text-green-300"></i><span>Automatic persistence enabled</span></div>
+    <p class="text-[10px] text-gray-500 leading-5 mt-3">Time and checked dates remain saved in this browser until site storage is cleared. Export backups for extra protection.</p>
+    <div class="flex gap-2 mt-4"><button id="exportBtn2" class="btn secondary flex-1 rounded-xl py-3 text-[10px]">Export</button><button id="importBtn2" class="btn secondary flex-1 rounded-xl py-3 text-[10px]">Import</button></div>
+  </section>
+</aside>
+</div>
+
+<footer class="mt-8 pt-5 border-t border-white/[.07] flex flex-wrap justify-between gap-3 text-[10px] text-gray-600"><span>JEE 2027 · THE FINAL CAMPAIGN</span><span id="footerDate" class="mono"></span></footer>
+</div>
+
+<div id="toast" class="toast" role="status" aria-live="polite"></div>
+
+<script>
+(() => {
+'use strict';
+
+const KEY='jee2027_campaign_v2';
+const SUBJECTS=[
+ {name:'Physics',color:'#80aaff'},
+ {name:'Chemistry',color:'#ff997b'},
+ {name:'Mathematics',color:'#f5d547'},
+ {name:'Test / Mock',color:'#64e0bd'}
+];
+const EXAM=new Date(2027,0,20,0,0,0,0);
+const START=new Date(2026,9,14,0,0,0,0);
+const END=new Date(2027,0,20,0,0,0,0);
+const $=id=>document.getElementById(id);
+const DAY=86400000;
+const keyOf=d=>`${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}-${String(d.getDate()).padStart(2,'0')}`;
+const dateOf=k=>{const [y,m,d]=k.split('-').map(Number);return new Date(y,m-1,d)};
+const dates=[];
+for(let d=new Date(START);d<=END;d.setDate(d.getDate()+1))dates.push({key:keyOf(d),date:new Date(d),index:dates.length+1});
+const TOTAL_DAYS=dates.length;
+
+function fresh(){
+ const subjectMs={};SUBJECTS.forEach(s=>subjectMs[s.name]=0);
+ return {version:2,totalMs:0,subjectMs,activeSubject:'Chemistry',running:false,startedAt:null,checkedDays:{},createdAt:Date.now(),lastSavedAt:Date.now()};
+}
+function normalize(raw){
+ const s=fresh();if(!raw||typeof raw!=='object')return s;
+ s.totalMs=Math.max(0,Number(raw.totalMs)||0);
+ SUBJECTS.forEach(x=>s.subjectMs[x.name]=Math.max(0,Number(raw.subjectMs?.[x.name])||0));
+ if(SUBJECTS.some(x=>x.name===raw.activeSubject))s.activeSubject=raw.activeSubject;
+ if(raw.checkedDays&&typeof raw.checkedDays==='object')dates.forEach(d=>{if(raw.checkedDays[d.key]===true)s.checkedDays[d.key]=true});
+ s.createdAt=Number(raw.createdAt)||Date.now();
+ s.lastSavedAt=Number(raw.lastSavedAt)||Date.now();
+ if(raw.running===true&&Number.isFinite(Number(raw.startedAt))){s.running=true;s.startedAt=Number(raw.startedAt)}
+ return s;
+}
+function load(){
+ try{return normalize(JSON.parse(localStorage.getItem(KEY)||'null'))}
+ catch(e){console.error(e);return fresh()}
+}
+let state=load(),monthFilter='all',toastTimer=null,lastSave=0;
+function save(){
+ state.lastSavedAt=Date.now();
+ try{
+  localStorage.setItem(KEY,JSON.stringify(state));
+  if($('saveStatus'))$('saveStatus').textContent='Saved locally · '+new Date().toLocaleTimeString();
+  return true;
+ }catch(e){
+  if($('saveStatus'))$('saveStatus').textContent='Storage unavailable — export a backup.';
+  console.error(e);return false;
+ }
+}
+function checkpoint(now=Date.now()){
+ if(!state.running||!Number.isFinite(state.startedAt))return;
+ const elapsed=Math.max(0,now-state.startedAt);
+ state.totalMs+=elapsed;
+ state.subjectMs[state.activeSubject]=(state.subjectMs[state.activeSubject]||0)+elapsed;
+ state.startedAt=now;
+}
+function flush(){checkpoint();save();renderAll()}
+function fmt(ms){
+ const s=Math.floor(Math.max(0,ms)/1000);
+ return [Math.floor(s/3600),Math.floor(s%3600/60),s%60].map(n=>String(n).padStart(2,'0')).join(':');
+}
+function compact(ms){
+ const s=Math.floor(Math.max(0,ms)/1000),h=Math.floor(s/3600),m=Math.floor(s%3600/60),sec=s%60;
+ return h?`${h}h ${String(m).padStart(2,'0')}m`:m?`${m}m ${String(sec).padStart(2,'0')}s`:`${sec}s`;
+}
+function toast(msg){
+ $('toast').textContent=msg;$('toast').classList.add('show');clearTimeout(toastTimer);
+ toastTimer=setTimeout(()=>$('toast').classList.remove('show'),2300);
+}
+function currentTotal(now=Date.now()){return state.totalMs+(state.running?Math.max(0,now-state.startedAt):0)}
+function subjectTotal(name,now=Date.now()){return state.subjectMs[name]+(state.running&&state.activeSubject===name?Math.max(0,now-state.startedAt):0)}
+
+function renderTimer(now=Date.now()){
+ const total=currentTotal(now);
+ $('totalTime').textContent=fmt(total);
+ $('milliseconds').textContent='.'+String(Math.floor(total%1000)).padStart(3,'0');
+ $('statusText').textContent=state.running?'ACTIVE':'PAUSED';
+ $('statusDot').style.background=state.running?'var(--green)':'#737b8f';
+ $('statusDot').style.boxShadow=state.running?'0 0 12px var(--green)':'none';
+ $('startPauseIcon').className=state.running?'fa-solid fa-pause':'fa-solid fa-play ml-1';
+ $('startPauseBtn').setAttribute('aria-label',state.running?'Pause timer':'Start timer');
+ $('activeSubjectLabel').textContent=state.activeSubject;
+ $('activeSubjectLabel').style.color=SUBJECTS.find(s=>s.name===state.activeSubject).color;
+ document.querySelectorAll('.subject').forEach(el=>{
+  const active=el.dataset.subject===state.activeSubject;
+  el.classList.toggle('active',active);el.setAttribute('aria-pressed',String(active));
+ });
+ SUBJECTS.forEach(s=>{
+  const el=document.querySelector(`[data-subject-time="${s.name}"]`);
+  if(el)el.textContent=fmt(subjectTotal(s.name,now));
+ });
+ $('subjectTotalLabel').textContent=compact(total);
+ $('subjectDistribution').innerHTML='';
+ $('subjectLegend').innerHTML='';
+ $('statsSubjects').innerHTML='';
+ SUBJECTS.forEach(s=>{
+  const ms=subjectTotal(s.name,now),pct=total?ms/total*100:0;
+  const seg=document.createElement('div');seg.style.cssText=`width:${pct}%;min-width:${ms>0?2:0}px;background:${s.color};border-radius:10px`;seg.title=s.name+': '+compact(ms);
+  $('subjectDistribution').appendChild(seg);
+  const legend=document.createElement('div');legend.className='flex items-center gap-2 min-w-0 text-[10px] text-gray-400';
+  legend.innerHTML=`<span style="width:7px;height:7px;border-radius:50%;background:${s.color};flex-shrink:0"></span><span class="truncate">${s.name}</span>`;
+  $('subjectLegend').appendChild(legend);
+  const row=document.createElement('div');
+  row.innerHTML=`<div class="flex justify-between gap-3 text-xs mb-2"><span>${s.name}</span><span class="mono">${compact(ms)}</span></div><div class="bar"><div style="width:${pct}%;background:${s.color}"></div></div>`;
+  $('statsSubjects').appendChild(row);
+ });
+}
+function renderCountdown(now=new Date()){
+ const rem=Math.max(0,EXAM.getTime()-now.getTime()),sec=Math.floor(rem/1000);
+ const days=Math.floor(sec/86400),hours=Math.floor(sec%86400/3600),mins=Math.floor(sec%3600/60),seconds=sec%60;
+ $('cdDays').textContent=String(days).padStart(3,'0');
+ $('cdHours').textContent=String(hours).padStart(2,'0');
+ $('cdMinutes').textContent=String(mins).padStart(2,'0');
+ $('cdSeconds').textContent=String(seconds).padStart(2,'0');
+ ['statCountdown','statCountdown2'].forEach(id=>$(id).textContent=String(days).padStart(3,'0'));
+ const span=EXAM.getTime()-START.getTime(),elapsed=Math.max(0,now.getTime()-START.getTime());
+ const pct=Math.max(0,Math.min(100,elapsed/span*100));
+ $('countdownProgress').style.width=pct+'%';$('countdownPercent').textContent=rem===0?'Exam day':pct.toFixed(1)+'% elapsed';
+}
+function renderRoadmapStats(){
+ const completed=dates.filter(d=>state.checkedDays[d.key]).length,pct=completed/TOTAL_DAYS*100;
+ $('dailyProgress').textContent=`${completed} / ${TOTAL_DAYS}`;
+ $('statRoadmap').textContent=pct.toFixed(1)+'%';
+ $('statRoadmapBar').style.width=pct+'%';
+ $('dailyProgressBar').style.width=pct+'%';
+ $('sideProgress').textContent=`${completed} / ${TOTAL_DAYS}`;
+ $('sideProgressBar').style.width=pct+'%';
+ $('statRoadmap2').textContent=pct.toFixed(1)+'%';
+ const today=keyOf(new Date());
+ $('todayStatus').textContent=today<keyOf(START)||today>keyOf(END)?'Today is outside the current checklist dates.':state.checkedDays[today]?'Today’s target is marked complete. Keep the streak alive.':'Today is on your checklist. Choose your target and execute.';
+}
+function renderStats(now=Date.now()){
+ const total=currentTotal(now),elapsedDays=Math.max(1,Math.floor((new Date(new Date().setHours(0,0,0,0)).getTime()-new Date(state.createdAt).setHours(0,0,0,0))/DAY)+1);
+ const avg=total/elapsedDays;
+ $('statTotal').textContent=compact(total);$('statAverage').textContent=compact(avg);
+ $('statTotal2').textContent=compact(total);$('statAverage2').textContent=compact(avg);
+}
+function renderCalendar(){
+ const root=$('calendarList');root.innerHTML='';
+ const today=keyOf(new Date()),frag=document.createDocumentFragment();
+ const visible=dates.filter(d=>monthFilter==='all'||d.key.startsWith(monthFilter));
+ visible.forEach(d=>{
+  const checked=!!state.checkedDays[d.key],isToday=d.key===today;
+  const row=document.createElement('div');row.className='day'+(checked?' done':'');row.dataset.date=d.key;
+  const idx=document.createElement('span');idx.className='day-index';idx.textContent='#'+d.index;
+  const info=document.createElement('div');info.className='min-w-0';
+  const date=document.createElement('div');date.className='date-label text-xs font-medium '+(isToday&&!checked?'text-yellow-200':'text-gray-200');
+  date.textContent=d.date.toLocaleDateString('en-IN',{weekday:'short',day:'2-digit',month:'short',year:'numeric'});
+  const sub=document.createElement('div');sub.className='text-[9px] text-gray-500 mono mt-1';
+  sub.textContent=isToday?'TODAY · TARGET DAY':checked?'COMPLETED':d.key<today?'PAST TARGET':'UPCOMING';
+  info.append(date,sub);
+  const check=document.createElement('input');check.type='checkbox';check.className='daycheck';check.checked=checked;check.setAttribute('aria-label',`Complete day ${d.index}, ${d.key}`);
+  check.addEventListener('change',()=>{
+   if(check.checked)state.checkedDays[d.key]=true;else delete state.checkedDays[d.key];
+   save();renderCalendar();renderRoadmapStats();
+  });
+  row.append(idx,info,check);
+  row.addEventListener('click',e=>{if(e.target===check)return;check.checked=!check.checked;check.dispatchEvent(new Event('change'))});
+  frag.appendChild(row);
+ });
+ root.appendChild(frag);
+}
+function setMonthFilterButtons(){
+ document.querySelectorAll('.month-filter').forEach(b=>{
+  const active=b.dataset.month===monthFilter;
+  b.classList.toggle('active',active);
+  b.classList.toggle('border-yellow-300/30',active);
+  b.classList.toggle('text-yellow-200',active);
+  b.classList.toggle('text-gray-400',!active);
+ });
+}
+function jumpDate(dateKey){
+ if(dateKey<keyOf(START)||dateKey>keyOf(END)){toast('That date is outside the checklist.');return}
+ showView('calendar');
+ monthFilter='all';setMonthFilterButtons();renderCalendar();
+ setTimeout(()=>{
+  const row=$('calendarList').querySelector(`[data-date="${dateKey}"]`);
+  if(row){row.scrollIntoView({behavior:'smooth',block:'center'});row.style.background='#f5d54712';setTimeout(()=>row.style.background='',1800)}
+ },100);
+}
+function jumpToday(){const t=keyOf(new Date());jumpDate(t)}
+function renderAll(now=Date.now()){
+ renderTimer(now);renderCountdown(new Date(now));renderStats(now);renderRoadmapStats();
+ $('currentDate').textContent=new Date().toLocaleDateString('en-IN',{day:'2-digit',month:'short',year:'numeric'});
+ $('footerDate').textContent=new Date().toLocaleDateString('en-IN',{weekday:'long',day:'2-digit',month:'short',year:'numeric'}).toUpperCase();
+}
+function showView(name){
+ document.querySelectorAll('.panel-view').forEach(v=>v.classList.toggle('active',v.id==='view-'+name));
+ document.querySelectorAll('.nav button').forEach(b=>b.classList.toggle('active',b.dataset.view===name));
+ window.scrollTo({top:0,behavior:'smooth'});
+}
+document.querySelectorAll('.nav button').forEach(b=>b.addEventListener('click',()=>showView(b.dataset.view)));
+document.querySelectorAll('[data-open-calendar]').forEach(b=>b.addEventListener('click',()=>{monthFilter='all';setMonthFilterButtons();renderCalendar();showView('calendar')}));
+document.querySelectorAll('[data-jump]').forEach(b=>b.addEventListener('click',()=>jumpDate(b.dataset.jump)));
+
+$('startPauseBtn').addEventListener('click',()=>{
+ if(state.running){checkpoint();state.running=false;state.startedAt=null;save();renderAll();toast('Timer paused. Progress saved.')}
+ else{state.running=true;state.startedAt=Date.now();save();renderAll();toast('Focus session started.')}
+});
+$('resetBtn').addEventListener('click',()=>{
+ if(!confirm('Reset all accumulated study time for every subject? Your checklist will remain untouched.'))return;
+ state.running=false;state.startedAt=null;state.totalMs=0;SUBJECTS.forEach(s=>state.subjectMs[s.name]=0);
+ save();renderAll();toast('Study timers reset.');
+});
+document.querySelectorAll('.subject').forEach(b=>b.addEventListener('click',()=>{
+ const name=b.dataset.subject;if(name===state.activeSubject)return;
+ checkpoint();state.activeSubject=name;save();renderAll();toast(name+' selected.');
+}));
+document.querySelectorAll('.month-filter').forEach(b=>b.addEventListener('click',()=>{
+ monthFilter=b.dataset.month;setMonthFilterButtons();renderCalendar();
+}));
+$('jumpToday').addEventListener('click',jumpToday);
+$('uncheckAll').addEventListener('click',()=>{
+ const n=Object.keys(state.checkedDays).length;if(!n){toast('No checked days to clear.');return}
+ if(!confirm(`Clear all ${n} completed days? Study time will remain untouched.`))return;
+ state.checkedDays={};save();renderCalendar();renderRoadmapStats();toast('Checklist cleared.');
+});
+
+function exportData(){
+ checkpoint();save();
+ const blob=new Blob([JSON.stringify({app:'JEE 2027 Campaign',exportedAt:new Date().toISOString(),state},null,2)],{type:'application/json'});
+ const url=URL.createObjectURL(blob),a=document.createElement('a');
+ a.href=url;a.download='jee-2027-backup-'+keyOf(new Date())+'.json';document.body.appendChild(a);a.click();a.remove();setTimeout(()=>URL.revokeObjectURL(url),1000);toast('Backup exported.');
+}
+function openImport(){$('importFile').click()}
+$('exportBtn').addEventListener('click',exportData);$('exportBtn2').addEventListener('click',exportData);
+$('importBtn').addEventListener('click',openImport);$('importBtn2').addEventListener('click',openImport);
+$('importFile').addEventListener('change',async e=>{
+ const file=e.target.files?.[0];if(!file)return;
+ try{
+  const data=JSON.parse(await file.text()),raw=data.state||data;
+  if(!raw.subjectMs||!raw.checkedDays)throw new Error('Invalid backup');
+  if(!confirm('Replace current study times and checklist with this backup?'))return;
+  state=normalize(raw);save();renderCalendar();renderAll();toast('Backup imported.');
+ }catch(err){console.error(err);toast('Import failed. Choose a valid JSON backup.')}
+ finally{e.target.value=''}
+});
+window.addEventListener('pagehide',flush);
+document.addEventListener('visibilitychange',()=>{if(document.hidden)flush();else renderAll()});
+window.addEventListener('beforeunload',flush);
+
+renderCalendar();setMonthFilterButtons();renderAll();save();
+setInterval(()=>{
+ if(state.running)checkpoint();
+ renderAll();
+ if(Date.now()-lastSave>1000){save();lastSave=Date.now()}
+},37);
+})();
+</script>
+</body>
+</html>
